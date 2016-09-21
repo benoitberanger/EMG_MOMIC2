@@ -105,4 +105,47 @@ for c = 1 : length(conditions)
     
 end
 
+
+%%
+
+Min = 50; % pts
+Max = 200; % pts
+Window = Min:Max;
+
+C4.mean.extG = mean(MetaData{file_idx,6}.extG(:,Window),1);
+C4.mean.extD = mean(MetaData{file_idx,6}.extD(:,Window),1);
+C4.mean.fleG = mean(MetaData{file_idx,6}.fleG(:,Window),1);
+C4.mean.fleD = mean(MetaData{file_idx,6}.fleD(:,Window),1);
+[C4.coef.ext,C4.lags.ext]=xcorr(C4.mean.extG,C4.mean.extD,'coeff');
+[C4.coef.fle,C4.lags.fle]=xcorr(C4.mean.fleG,C4.mean.fleD,'coeff');
+C4.max.ext = max(C4.coef.ext);
+C4.max.fle = max(C4.coef.fle);
+[C4.RHO.ext,C4.PVAL.ext] = corr(C4.mean.extG',C4.mean.extD');
+[C4.RHO.fle,C4.PVAL.fle] = corr(C4.mean.fleG',C4.mean.fleD');
+
+C5.mean.extG = mean(MetaData{file_idx,7}.extG(:,Window),1);
+C5.mean.extD = mean(MetaData{file_idx,7}.extD(:,Window),1);
+C5.mean.fleG = mean(MetaData{file_idx,7}.fleG(:,Window),1);
+C5.mean.fleD = mean(MetaData{file_idx,7}.fleD(:,Window),1);
+[C5.coef.ext,C5.lags.ext]=xcorr(C5.mean.extG,C5.mean.extD,'coeff');
+[C5.coef.fle,C5.lags.fle]=xcorr(C5.mean.fleG,C5.mean.fleD,'coeff');
+C5.max.ext = max(C5.coef.ext);
+C5.max.fle = max(C5.coef.fle);
+[C5.RHO.ext,C5.PVAL.ext] = corr(C5.mean.extG',C5.mean.extD');
+[C5.RHO.fle,C5.PVAL.fle] = corr(C5.mean.fleG',C5.mean.fleD');
+
+fprintf('\n ')
+fprintf('XCORR \n ')
+fprintf('Condition 4 : ext=%1.3g fle=%1.3g \n ',C4.max.ext, C4.max.fle);
+fprintf('Condition 5 : ext=%1.3g fle=%1.3g \n ',C5.max.ext, C5.max.fle);
+fprintf('\n ')
+fprintf('CORR : RHO \n ')
+fprintf('Condition 4 : ext=%1.3g fle=%1.3g \n ',C4.RHO.ext, C4.RHO.fle);
+fprintf('Condition 5 : ext=%1.3g fle=%1.3g \n ',C5.RHO.ext, C5.RHO.fle);
+fprintf('\n ')
+fprintf('CORR : PVAL \n ')
+fprintf('Condition 4 : ext=%1.3g fle=%1.3g \n ',C4.PVAL.ext, C4.PVAL.fle);
+fprintf('Condition 5 : ext=%1.3g fle=%1.3g \n ',C5.PVAL.ext, C5.PVAL.fle);
+
+
 end
