@@ -24,7 +24,7 @@ end
 
 %% Load .xls
 
-[~,~,MetaDataXLS] = xlsread('MetaDataCECILE.xls');
+[~,~,MetaDataXLS] = xlsread('MetaDataCECILE_1essSub.xls');
 
 
 %% xcorr
@@ -33,7 +33,7 @@ muscles = {'extG' 'extD' 'fleG' 'fleD'};
 
 for f = 1 : size(MetaDataXLS,1)
     
-    if MetaDataXLS{f,6} == 1
+%     if MetaDataXLS{f,6} == 1
         
         for m = 1:length(muscles)
             
@@ -59,22 +59,38 @@ for f = 1 : size(MetaDataXLS,1)
             [C5.RHO.ext,C5.PVAL.ext] = corr(C5.mean.extG',C5.mean.extD');
             [C5.RHO.fle,C5.PVAL.fle] = corr(C5.mean.fleG',C5.mean.fleD');
             
-            MetaDataXLS{f,7}  = C4.max.ext;
-            MetaDataXLS{f,8}  = C4.max.fle;
-            MetaDataXLS{f,9}  = C5.max.ext;
-            MetaDataXLS{f,10} = C5.max.fle;
-            MetaDataXLS{f,11} = C4.RHO.ext;
-            MetaDataXLS{f,12} = C4.RHO.fle;
-            MetaDataXLS{f,13} = C5.RHO.ext;
-            MetaDataXLS{f,14} = C5.RHO.fle;
-            MetaDataXLS{f,15} = C4.PVAL.ext;
-            MetaDataXLS{f,16} = C4.PVAL.fle;
-            MetaDataXLS{f,17} = C5.PVAL.ext;
-            MetaDataXLS{f,18} = C5.PVAL.fle;
+            MetaDataXLS{f,8}  = C4.max.ext;
+            MetaDataXLS{f,9}  = C4.max.fle;
+            MetaDataXLS{f,10}  = C5.max.ext;
+            MetaDataXLS{f,11} = C5.max.fle;
+            MetaDataXLS{f,12} = C4.RHO.ext;
+            MetaDataXLS{f,13} = C4.RHO.fle;
+            MetaDataXLS{f,14} = C5.RHO.ext;
+            MetaDataXLS{f,15} = C5.RHO.fle;
+            MetaDataXLS{f,16} = C4.PVAL.ext;
+            MetaDataXLS{f,17} = C4.PVAL.fle;
+            MetaDataXLS{f,18} = C5.PVAL.ext;
+            MetaDataXLS{f,19} = C5.PVAL.fle;
             
         end
 
         
-    end
+%     end
     
 end
+
+
+%% Select the runs
+
+Controls_idx = cell2mat(MetaDataXLS(:,7))>0 & strcmp(MetaDataXLS(:,2),'C');
+Patients_idx = cell2mat(MetaDataXLS(:,7))>0 & strcmp(MetaDataXLS(:,2),'P');
+
+Controls = MetaDataXLS(Controls_idx,8:end);
+Patients = MetaDataXLS(Patients_idx,8:end);
+
+hdr = {'xcorr cond4 ext' 'xcorr cond4 fle' 'xcorr cond5 ext' 'xcorr cond5 fle'...
+    'corrRHO cond4 ext' 'corrRHO cond4 fle' 'corrRHO cond5 ext' 'corrRHO cond5 fle'...
+    'corrPVAL cond4 ext' 'corrPVAL cond4 fle' 'corrPVAL cond5 ext' 'corrPVAL cond5 fle'};
+
+save('PatientsControlsSTATS',...
+    'Controls','Patients','hdr')
