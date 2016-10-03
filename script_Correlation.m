@@ -24,7 +24,7 @@ end
 
 %% Load .xls
 
-[~,~,MetaDataXLS] = xlsread('MetaDataCECILE_1essSub.xls');
+SubjectInfo = CSVread('SubjectInfoFromCecile.csv');
 
 
 %% xcorr
@@ -37,9 +37,7 @@ sampleTime  = 1/100; % seconds : time between each samples, i.e. 1/samplingfrequ
 segmentLength = segmentTime/sampleTime; % number of samples per segments
 
 
-for file_idx = 1 : size(MetaDataXLS,1)
-    
-    %     if MetaDataXLS{f,6} == 1
+for file_idx = 1 : size(SubjectInfo,1)
     
     for m = 1:length(muscles)
         
@@ -90,27 +88,24 @@ for file_idx = 1 : size(MetaDataXLS,1)
         %         MetaDataXLS{f,18} = C5.PVAL.ext;
         %         MetaDataXLS{f,19} = C5.PVAL.fle;
         
-        MetaDataXLS{file_idx,9}  = C4.AUC.ext;
-        MetaDataXLS{file_idx,10} = C4.AUC.fle;
-        MetaDataXLS{file_idx,11} = C5.AUC.ext;
-        MetaDataXLS{file_idx,12} = C5.AUC.fle;
+        SubjectInfo{file_idx,9}  = C4.AUC.ext;
+        SubjectInfo{file_idx,10} = C4.AUC.fle;
+        SubjectInfo{file_idx,11} = C5.AUC.ext;
+        SubjectInfo{file_idx,12} = C5.AUC.fle;
         
         
     end
-    
-    
-    %     end
     
 end
 
 
 %% Select the runs
 
-Controls_idx = cell2mat(MetaDataXLS(:,7))>0 & strcmp(MetaDataXLS(:,2),'C');
-Patients_idx = cell2mat(MetaDataXLS(:,7))>0 & strcmp(MetaDataXLS(:,2),'P');
+Controls_idx = cell2mat(SubjectInfo(:,7))>0 & strcmp(SubjectInfo(:,2),'C');
+Patients_idx = cell2mat(SubjectInfo(:,7))>0 & strcmp(SubjectInfo(:,2),'P');
 
-Controls = MetaDataXLS(Controls_idx,8:end);
-Patients = MetaDataXLS(Patients_idx,8:end);
+Controls = SubjectInfo(Controls_idx,8:end);
+Patients = SubjectInfo(Patients_idx,8:end);
 
 % hdr = {'xcorr cond4 ext' 'xcorr cond4 fle' 'xcorr cond5 ext' 'xcorr cond5 fle'...
 %     'corrRHO cond4 ext' 'corrRHO cond4 fle' 'corrRHO cond5 ext' 'corrRHO cond5 fle'...
